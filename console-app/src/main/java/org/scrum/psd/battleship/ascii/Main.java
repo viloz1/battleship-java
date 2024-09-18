@@ -17,6 +17,8 @@ public class Main {
     private static List<Ship> enemyFleet;
     private static List<Position> enemyUntriedPositions;
 
+    private static Position lastEnemyHit = null; 
+
     private static final Telemetry telemetry = new Telemetry();
 
     public static void main(String[] args) {
@@ -102,8 +104,12 @@ public class Main {
             System.out.println("");
             System.out.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? hit : "miss"));
             telemetry.trackEvent("Computer_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
+            lastEnemyHit = null;
+            
             if (isHit) {
                 beep();
+
+                lastEnemyHit = position;
 
                 System.out.println(colorize("                \\         .  ./", YELLOW_TEXT()));
                 System.out.println(colorize("              \\      .:\" \";'.:..\" \"   /", YELLOW_TEXT()));
