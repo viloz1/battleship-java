@@ -25,9 +25,9 @@ public class GameControllerTest {
             counter++;
         }
 
-        boolean result = GameController.checkIsHit(ships, new Position(Letter.A, 1));
+        String result = GameController.checkIsHit(ships, new Position(Letter.A, 1));
 
-        Assert.assertTrue(result);
+        Assert.assertNotEquals(result,"");
     }
 
     @Test
@@ -45,9 +45,9 @@ public class GameControllerTest {
             counter++;
         }
 
-        boolean result = GameController.checkIsHit(ships, new Position(Letter.H, 1));
+        String result = GameController.checkIsHit(ships, new Position(Letter.H, 1));
 
-        Assert.assertFalse(result);
+        Assert.assertEquals(result, "");
     }
 
     @Test(expected = IllegalArgumentException.class)
