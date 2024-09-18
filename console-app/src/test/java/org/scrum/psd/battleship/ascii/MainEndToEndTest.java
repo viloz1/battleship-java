@@ -39,4 +39,23 @@ public class MainEndToEndTest {
             Assert.assertTrue(systemOutRule.getLog().contains("Miss"));
         }
     }
+
+    @Test
+    public void enemyTriesAllPositions() {
+        try {
+            gameInput.provideLines("a1", "a2", "a3", "a4", "a5", "b1", "b2", "b3", "b4", "c1", "c2", "c3", "d1", "d2", "d3", "e1", "e2",
+                // Provide "a1" 64 times to make enemy do 64 turns
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1", "a1", "a1",    "a1", "a1", "a1", "a1", "a1",
+                "a1", "a1", "a1");
+
+            Main.main(new String[]{});
+        } catch(NoSuchElementException e) {
+            Assert.assertTrue(Main.getEnemyUntriedPositions().isEmpty());
+        }
+    }
 }

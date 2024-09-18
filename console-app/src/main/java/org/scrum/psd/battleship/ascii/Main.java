@@ -45,8 +45,6 @@ public class Main {
 
     private static void StartGame() {
 
-        Random random = new Random();
-
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("\033[2J\033[;H");
@@ -88,13 +86,7 @@ public class Main {
             System.out.println(isHit ? colorize(hit, BLUE_TEXT()) : colorize("Miss", YELLOW_TEXT() ));
             telemetry.trackEvent("Player_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
 
-            // position = getRandomPosition();
-
-            // Get a random index from the list
-            int randomIndex = random.nextInt(enemyUntriedPositions.size());
-
-            // Remove the element at the random index and return it
-            position = enemyUntriedPositions.remove(randomIndex);
+            position = enemyChoosePosition();
 
             checkHitResult = GameController.checkIsHit(myFleet, position);
             isHit = !checkHitResult.isEmpty();
@@ -198,6 +190,20 @@ public class Main {
 
         enemyFleet.get(4).getPositions().add(new Position(Letter.C, 5));
         enemyFleet.get(4).getPositions().add(new Position(Letter.C, 6));
+    }
+
+    private static Position enemyChoosePosition() {
+        Random random = new Random();
+
+        // Get a random index from the list
+        int randomIndex = random.nextInt(enemyUntriedPositions.size());
+
+        // Remove the element at the random index and return it
+        return enemyUntriedPositions.remove(randomIndex);
+    }
+
+    public static List<Position> getEnemyUntriedPositions() {
+        return new ArrayList<>(enemyUntriedPositions);
     }
 }
 
