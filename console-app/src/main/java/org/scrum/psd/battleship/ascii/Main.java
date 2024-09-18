@@ -1,6 +1,7 @@
 package org.scrum.psd.battleship.ascii;
 
 import jdk.internal.net.http.common.Pair;
+
 import org.scrum.psd.battleship.controller.GameController;
 import org.scrum.psd.battleship.controller.GridGenerator;
 import org.scrum.psd.battleship.controller.dto.Letter;
@@ -12,10 +13,15 @@ import java.util.*;
 import static com.diogonunes.jcolor.Ansi.colorize;
 import static com.diogonunes.jcolor.Attribute.*;
 
+import sun.java2d.pipe.ShapeDrawPipe;
+
 public class Main {
     private static List<Ship> myFleet;
     private static List<Ship> enemyFleet;
     private static List<Position> enemyUntriedPositions;
+
+    private static List<String>myShipsSunken;
+    private static List<String> enemyShipsSunken;
 
     private static Position lastEnemyHit = null; 
 
@@ -64,12 +70,13 @@ public class Main {
             System.out.println("Player, it's your turn");
             System.out.println("Enter coordinates for your shot :");
             Position position = parsePosition(scanner.next());
-            String checkHitResult = GameController.checkIsHit(enemyFleet, position);
-            boolean isHit = !checkHitResult.isEmpty();
+            Ship checkHitResult = GameController.checkIsHit(enemyFleet, position);
+            boolean isHit = !(checkHitResult==null);
             if (isHit) {
                 beep();
 
-
+                boolean sunken = checkHitResult.isHit(position);
+                lastEnemyHit = position;
 
                 System.out.println(colorize("                \\         .  ./", BLUE_TEXT()));
                 System.out.println(colorize("              \\      .:\" \";'.:..\" \"   /", BLUE_TEXT()));
@@ -79,9 +86,14 @@ public class Main {
                 System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", BLUE_TEXT()));
                 System.out.println(colorize("                 -\\  \\     /  /-", BLUE_TEXT()));
                 System.out.println(colorize("                   \\  \\   /  /", BLUE_TEXT()));
+
+                if(sunken) {
+                    //System.out.printf("You have sunken a %s", checkHitResult.getName());
+                    enemyShipsSunken.add(checkHitResult.getName());
+                }
             }
 
-            String hit = String.format("Yeah ! Nice hit ! You hit %s", checkHitResult);
+            String hit = String.format("Yeah ! Nice hit ! ");
 
             System.out.println(isHit ? colorize(hit, BLUE_TEXT()) : colorize("Miss", YELLOW_TEXT() ));
             telemetry.trackEvent("Player_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
@@ -89,9 +101,9 @@ public class Main {
             position = enemyChoosePosition();
 
             checkHitResult = GameController.checkIsHit(myFleet, position);
-            isHit = !checkHitResult.isEmpty();
+            isHit = !(checkHitResult==null);
 
-            hit = String.format("hit your %s !", checkHitResult);
+            hit = String.format("hit you!");
 
             System.out.println("");
             System.out.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? hit : "miss"));
@@ -101,6 +113,7 @@ public class Main {
             if (isHit) {
                 beep();
 
+                boolean sunken = checkHitResult.isHit(position);
                 lastEnemyHit = position;
 
                 System.out.println(colorize("                \\         .  ./", YELLOW_TEXT()));
@@ -111,6 +124,11 @@ public class Main {
                 System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", YELLOW_TEXT()));
                 System.out.println(colorize("                 -\\  \\     /  /-", YELLOW_TEXT()));
                 System.out.println(colorize("                   \\  \\   /  /", YELLOW_TEXT()));
+
+                if(sunken) {
+                    //System.out.printf("The enemey have sunken a %s", checkHitResult.getName());
+                    myShipsSunken.add(checkHitResult.getName());
+                }
 
             }
 
@@ -142,6 +160,9 @@ public class Main {
         InitializeMyFleet();
 
         InitializeEnemyFleet();
+
+        enemyShipsSunken = new ArrayList();
+        myShipsSunken = new ArrayList();
 
         enemyUntriedPositions = GridGenerator.generateGrid();
     }

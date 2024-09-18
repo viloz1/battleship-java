@@ -13,6 +13,7 @@ public class Ship {
 
     public Ship() {
         this.positions = new ArrayList<>();
+        this.remainingPositions = new ArrayList<>();
     }
 
     public Ship(String name, int size) {
@@ -57,10 +58,7 @@ public class Ship {
 
     public boolean isHit(Position position) {
         remainingPositions.remove(position);
-        if (remainingPositions.isEmpty()) {
-            return false;
-        }
-        return true;
+        return remainingPositions.isEmpty();
     }
 
     public boolean isSunken() {
@@ -89,6 +87,7 @@ public class Ship {
 
     public void setPositions(List<Position> positions) {
         this.positions = positions;
+        this.remainingPositions = positions;
     }
 
     public Color getColor() {
