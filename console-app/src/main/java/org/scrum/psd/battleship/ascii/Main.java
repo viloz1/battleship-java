@@ -1,5 +1,6 @@
 package org.scrum.psd.battleship.ascii;
 
+import jdk.internal.net.http.common.Pair;
 import org.scrum.psd.battleship.controller.GameController;
 import org.scrum.psd.battleship.controller.dto.Letter;
 import org.scrum.psd.battleship.controller.dto.Position;
@@ -58,41 +59,52 @@ public class Main {
             System.out.println("Player, it's your turn");
             System.out.println("Enter coordinates for your shot :");
             Position position = parsePosition(scanner.next());
-            boolean isHit = GameController.checkIsHit(enemyFleet, position);
+            String checkHitResult = GameController.checkIsHit(enemyFleet, position);
+            boolean isHit = !checkHitResult.isEmpty();
             if (isHit) {
                 beep();
 
-                System.out.println("                \\         .  ./");
-                System.out.println("              \\      .:\" \";'.:..\" \"   /");
-                System.out.println("                  (M^^.^~~:.'\" \").");
-                System.out.println("            -   (/  .    . . \\ \\)  -");
-                System.out.println("               ((| :. ~ ^  :. .|))");
-                System.out.println("            -   (\\- |  \\ /  |  /)  -");
-                System.out.println("                 -\\  \\     /  /-");
-                System.out.println("                   \\  \\   /  /");
+
+
+                System.out.println(colorize("                \\         .  ./", BLUE_TEXT()));
+                System.out.println(colorize("              \\      .:\" \";'.:..\" \"   /", BLUE_TEXT()));
+                System.out.println(colorize("                  (M^^.^~~:.'\" \").", BLUE_TEXT()));
+                System.out.println(colorize("            -   (/  .    . . \\ \\)  -", BLUE_TEXT()));
+                System.out.println(colorize("               ((| :. ~ ^  :. .|))", BLUE_TEXT()));
+                System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", BLUE_TEXT()));
+                System.out.println(colorize("                 -\\  \\     /  /-", BLUE_TEXT()));
+                System.out.println(colorize("                   \\  \\   /  /", BLUE_TEXT()));
             }
 
-            System.out.println(isHit ? "Yeah ! Nice hit !" : "Miss");
+            String hit = String.format("Yeah ! Nice hit ! You hit %s", checkHitResult);
+
+            System.out.println(isHit ? colorize(hit, BLUE_TEXT()) : colorize("Miss", YELLOW_TEXT() ));
             telemetry.trackEvent("Player_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
 
             position = getRandomPosition();
-            isHit = GameController.checkIsHit(myFleet, position);
+            checkHitResult = GameController.checkIsHit(myFleet, position);
+            isHit = !checkHitResult.isEmpty();
+
+            hit = String.format("hit your %s !", checkHitResult);
+
             System.out.println("");
-            System.out.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? "hit your ship !" : "miss"));
+            System.out.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? hit : "miss"));
             telemetry.trackEvent("Computer_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
             if (isHit) {
                 beep();
 
-                System.out.println("                \\         .  ./");
-                System.out.println("              \\      .:\" \";'.:..\" \"   /");
-                System.out.println("                  (M^^.^~~:.'\" \").");
-                System.out.println("            -   (/  .    . . \\ \\)  -");
-                System.out.println("               ((| :. ~ ^  :. .|))");
-                System.out.println("            -   (\\- |  \\ /  |  /)  -");
-                System.out.println("                 -\\  \\     /  /-");
-                System.out.println("                   \\  \\   /  /");
+                System.out.println(colorize("                \\         .  ./", YELLOW_TEXT()));
+                System.out.println(colorize("              \\      .:\" \";'.:..\" \"   /", YELLOW_TEXT()));
+                System.out.println(colorize("                  (M^^.^~~:.'\" \").", YELLOW_TEXT()));
+                System.out.println(colorize("            -   (/  .    . . \\ \\)  -", YELLOW_TEXT()));
+                System.out.println(colorize("               ((| :. ~ ^  :. .|))", YELLOW_TEXT()));
+                System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", YELLOW_TEXT()));
+                System.out.println(colorize("                 -\\  \\     /  /-", YELLOW_TEXT()));
+                System.out.println(colorize("                   \\  \\   /  /", YELLOW_TEXT()));
 
             }
+
+            System.out.println("--------------------------------");
         } while (true);
     }
 
@@ -139,6 +151,7 @@ public class Main {
                 telemetry.trackEvent("Player_PlaceShipPosition", "Position", positionInput, "Ship", ship.getName(), "PositionInShip", Integer.valueOf(i).toString());
             }
         }
+
     }
 
     private static void InitializeEnemyFleet() {

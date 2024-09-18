@@ -9,6 +9,7 @@ public class Ship {
     private int size;
     private List<Position> positions;
     private Color color;
+    private List<Position> remainingPositions;
 
     public Ship() {
         this.positions = new ArrayList<>();
@@ -25,6 +26,7 @@ public class Ship {
         this(name, size);
 
         this.positions = positions;
+        this.remainingPositions = positions;
     }
 
     public Ship(String name, int size, Color color) {
@@ -38,13 +40,32 @@ public class Ship {
             positions = new ArrayList<>();
         }
 
+        if (remainingPositions == null) {
+            remainingPositions = new ArrayList<>();
+        }
+
         Letter letter = Letter.valueOf(input.toUpperCase().substring(0, 1));
         int number = Integer.parseInt(input.substring(1));
 
-        positions.add(new Position(letter, number));
+        Position position = new Position(letter, number);
+
+        positions.add(position);
+        remainingPositions.add(position);
     }
 
     // TODO: property change listener implementieren
+
+    public boolean isHit(Position position) {
+        remainingPositions.remove(position);
+        if (remainingPositions.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isSunken() {
+        return remainingPositions.isEmpty();
+    }
 
     public boolean isPlaced() {
         return isPlaced;
