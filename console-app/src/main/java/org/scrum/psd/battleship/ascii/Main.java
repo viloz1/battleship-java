@@ -20,7 +20,7 @@ public class Main {
     private static List<Ship> enemyFleet;
     private static List<Position> enemyUntriedPositions;
 
-    private static List<String>myShipsSunken;
+    private static List<String> myShipsSunken;
     private static List<String> enemyShipsSunken;
 
     private static Position lastEnemyHit = null; 
@@ -72,10 +72,11 @@ public class Main {
             Position position = parsePosition(scanner.next());
             Ship checkHitResult = GameController.checkIsHit(enemyFleet, position);
             boolean isHit = !(checkHitResult==null);
+            boolean sunken = false;
             if (isHit) {
                 beep();
 
-                boolean sunken = checkHitResult.isHit(position);
+                sunken = checkHitResult.isHit(position);
                 lastEnemyHit = position;
 
                 System.out.println(colorize("                \\         .  ./", BLUE_TEXT()));
@@ -86,16 +87,18 @@ public class Main {
                 System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", BLUE_TEXT()));
                 System.out.println(colorize("                 -\\  \\     /  /-", BLUE_TEXT()));
                 System.out.println(colorize("                   \\  \\   /  /", BLUE_TEXT()));
-
-                if(sunken) {
-                    //System.out.printf("You have sunken a %s", checkHitResult.getName());
-                    enemyShipsSunken.add(checkHitResult.getName());
-                }
             }
 
             String hit = String.format("Yeah ! Nice hit ! ");
 
+
+
             System.out.println(isHit ? colorize(hit, BLUE_TEXT()) : colorize("Miss", YELLOW_TEXT() ));
+            if(sunken) {
+                System.out.printf("You have sunken a %s\n", checkHitResult.getName());
+                enemyShipsSunken.add(checkHitResult.getName());
+            }
+
             telemetry.trackEvent("Player_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
 
             position = enemyChoosePosition();
@@ -109,11 +112,11 @@ public class Main {
             System.out.println(String.format("Computer shoot in %s%s and %s", position.getColumn(), position.getRow(), isHit ? hit : "miss"));
             telemetry.trackEvent("Computer_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
             lastEnemyHit = null;
-            
+
             if (isHit) {
                 beep();
 
-                boolean sunken = checkHitResult.isHit(position);
+                sunken = checkHitResult.isHit(position);
                 lastEnemyHit = position;
 
                 System.out.println(colorize("                \\         .  ./", YELLOW_TEXT()));
@@ -126,7 +129,7 @@ public class Main {
                 System.out.println(colorize("                   \\  \\   /  /", YELLOW_TEXT()));
 
                 if(sunken) {
-                    //System.out.printf("The enemey have sunken a %s", checkHitResult.getName());
+                    System.out.printf("The enemey have sunken a %s\n", checkHitResult.getName());
                     myShipsSunken.add(checkHitResult.getName());
                 }
 
@@ -190,27 +193,43 @@ public class Main {
     private static void InitializeEnemyFleet() {
         enemyFleet = GameController.initializeShips();
 
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 4));
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 5));
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 6));
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 7));
-        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 8));
+        List<Position> positions = new ArrayList<>();
 
-        enemyFleet.get(1).getPositions().add(new Position(Letter.E, 6));
-        enemyFleet.get(1).getPositions().add(new Position(Letter.E, 7));
-        enemyFleet.get(1).getPositions().add(new Position(Letter.E, 8));
-        enemyFleet.get(1).getPositions().add(new Position(Letter.E, 9));
+        positions.add(new Position(Letter.B, 4));
+        positions.add(new Position(Letter.B, 5));
+        positions.add(new Position(Letter.B, 6));
+        positions.add(new Position(Letter.B, 7));
+        positions.add(new Position(Letter.B, 8));
 
-        enemyFleet.get(2).getPositions().add(new Position(Letter.A, 3));
-        enemyFleet.get(2).getPositions().add(new Position(Letter.B, 3));
-        enemyFleet.get(2).getPositions().add(new Position(Letter.C, 3));
+        enemyFleet.get(0).setPositions(positions);
+        positions = new ArrayList<>();
 
-        enemyFleet.get(3).getPositions().add(new Position(Letter.F, 8));
-        enemyFleet.get(3).getPositions().add(new Position(Letter.G, 8));
-        enemyFleet.get(3).getPositions().add(new Position(Letter.H, 8));
+        positions.add(new Position(Letter.E, 6));
+        positions.add(new Position(Letter.E, 7));
+        positions.add(new Position(Letter.E, 8));
+        positions.add(new Position(Letter.E, 9));
 
-        enemyFleet.get(4).getPositions().add(new Position(Letter.C, 5));
-        enemyFleet.get(4).getPositions().add(new Position(Letter.C, 6));
+        enemyFleet.get(1).setPositions(positions);
+        positions = new ArrayList<>();
+
+        positions.add(new Position(Letter.A, 3));
+        positions.add(new Position(Letter.B, 3));
+        positions.add(new Position(Letter.C, 3));
+
+        enemyFleet.get(2).setPositions(positions);
+        positions = new ArrayList<>();
+
+        positions.add(new Position(Letter.F, 8));
+        positions.add(new Position(Letter.G, 8));
+        positions.add(new Position(Letter.H, 8));
+
+        enemyFleet.get(3).setPositions(positions);
+        positions = new ArrayList<>();
+
+        positions.add(new Position(Letter.C, 5));
+        positions.add(new Position(Letter.C, 6));
+
+        enemyFleet.get(4).setPositions(positions);
     }
 
     private static Position enemyChoosePosition() {

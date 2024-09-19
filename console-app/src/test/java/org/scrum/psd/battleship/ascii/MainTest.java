@@ -9,6 +9,7 @@ import org.scrum.psd.battleship.controller.dto.Letter;
 import org.scrum.psd.battleship.controller.dto.Position;
 import org.scrum.psd.battleship.controller.dto.Ship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -38,9 +39,52 @@ public class MainTest {
 
         enemyFleet.get(0).getPositions().add(new Position(Letter.B, 4));
 
-        String result = GameController.checkIsHit(enemyFleet, new Position(Letter.B, 4));
+        Ship result = GameController.checkIsHit(enemyFleet, new Position(Letter.B, 4));
 
-        Assertions.assertEquals(result, "Aircraft Carrier");
-        
+        Assertions.assertEquals(result.getName(), "Aircraft Carrier");
     }
+
+    @Test
+    public void testIsSunken() {
+
+        List<Ship> enemyFleet = GameController.initializeShips();
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(Letter.B, 4));
+        positions.add(new Position(Letter.B, 5));
+
+        enemyFleet.get(0).setPositions(positions);
+
+        Ship result = GameController.checkIsHit(enemyFleet, new Position(Letter.B, 4));
+        result.isHit(new Position(Letter.B, 4));
+
+        Assertions.assertFalse(result.isSunken());
+
+        result = GameController.checkIsHit(enemyFleet, new Position(Letter.B, 5));
+        result.isHit(new Position(Letter.B, 5));
+
+        Assertions.assertTrue(result.isSunken());
+    }
+
+    @Test
+    public void positionsIsSet() {
+        List<Ship> enemyFleet = GameController.initializeShips();
+
+        enemyFleet.get(0).getPositions().add(new Position(Letter.B, 4));
+
+        Assertions.assertTrue(enemyFleet.get(0).getPositions().contains(new Position(Letter.B, 4)));
+    }
+
+    @Test
+    public void remainingPositionsIsSet() {
+        List<Ship> enemyFleet = GameController.initializeShips();
+
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(Letter.B, 4));
+
+        enemyFleet.get(0).setPositions(positions);
+
+        Assertions.assertTrue(enemyFleet.get(0).getRemainingPositions().contains(new Position(Letter.B, 4)));
+    }
+
 }

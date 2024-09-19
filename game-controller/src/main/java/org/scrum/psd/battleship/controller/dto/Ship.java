@@ -85,6 +85,10 @@ public class Ship {
         return positions;
     }
 
+    public List<Position> getRemainingPositions() {
+        return remainingPositions;
+    }
+
     public void setPositions(List<Position> positions) {
         this.positions = positions;
         this.remainingPositions = positions;
