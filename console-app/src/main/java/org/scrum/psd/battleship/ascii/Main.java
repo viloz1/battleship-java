@@ -66,6 +66,7 @@ public class Main {
         do {
             if(enemyFleet.size() == enemyShipsSunken.size()) {
                 System.out.println(colorize("You are the winner!", BLUE_TEXT()));
+                SoundEffectPlayer.playWinSound();
                 break;
             } else if (myFleet.size() == myShipsSunken.size()) {
                 System.out.println(colorize("You lost!", YELLOW_TEXT()));
