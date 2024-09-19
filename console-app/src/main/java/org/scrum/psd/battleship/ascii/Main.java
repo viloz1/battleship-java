@@ -67,6 +67,14 @@ public class Main {
         System.out.println("    \" \"\" \"\" \"\" \"");
 
         do {
+            if(enemyFleet.size() == enemyShipsSunken.size()) {
+                System.out.println(colorize("You are the winner!", BLUE_TEXT()));
+                break;
+            } else if (myFleet.size() == myShipsSunken.size()) {
+                System.out.println(colorize("You lost!", YELLOW_TEXT()));
+                break;
+            }
+
             System.out.println("");
             System.out.println("Player, it's your turn");
             System.out.println("Enter coordinates for your shot :");
