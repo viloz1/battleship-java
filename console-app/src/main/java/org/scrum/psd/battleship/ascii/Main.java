@@ -1,7 +1,7 @@
 package org.scrum.psd.battleship.ascii;
 
 import jdk.internal.net.http.common.Pair;
-
+import org.scrum.psd.battleship.ascii.sound.SoundEffectPlayer;
 import org.scrum.psd.battleship.controller.GameController;
 import org.scrum.psd.battleship.controller.GridGenerator;
 import org.scrum.psd.battleship.controller.dto.Letter;
@@ -9,7 +9,6 @@ import org.scrum.psd.battleship.controller.dto.Position;
 import org.scrum.psd.battleship.controller.dto.Ship;
 
 import java.util.*;
-
 import static com.diogonunes.jcolor.Ansi.colorize;
 import static com.diogonunes.jcolor.Attribute.*;
 
@@ -50,6 +49,8 @@ public class Main {
     }
 
     private static void StartGame() {
+
+        SoundEffectPlayer.playSound("fanfare");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -160,6 +161,8 @@ public class Main {
     }
 
     private static void InitializeGame() {
+        SoundEffectPlayer.playSound("fanfare");
+
         InitializeMyFleet();
 
         InitializeEnemyFleet();
