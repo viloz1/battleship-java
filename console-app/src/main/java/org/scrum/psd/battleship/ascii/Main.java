@@ -49,9 +49,6 @@ public class Main {
     }
 
     private static void StartGame() {
-
-        SoundEffectPlayer.playSound("fanfare");
-
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("\033[2J\033[;H");
@@ -96,6 +93,11 @@ public class Main {
                 System.out.println(colorize("            -   (\\- |  \\ /  |  /)  -", BLUE_TEXT()));
                 System.out.println(colorize("                 -\\  \\     /  /-", BLUE_TEXT()));
                 System.out.println(colorize("                   \\  \\   /  /", BLUE_TEXT()));
+                if (!sunken) {
+                    SoundEffectPlayer.playHitSound();
+                }
+            } else {
+                SoundEffectPlayer.playMissSound();
             }
 
             String hit = String.format("Yeah ! Nice hit ! ");
@@ -104,12 +106,22 @@ public class Main {
 
             System.out.println(isHit ? colorize(hit, BLUE_TEXT()) : colorize("Miss", YELLOW_TEXT() ));
             if(sunken) {
+                SoundEffectPlayer.playSinkSound();
                 System.out.printf("You have sunken a %s\n", checkHitResult.getName());
                 enemyShipsSunken.add(checkHitResult.getName());
             }
 
             telemetry.trackEvent("Player_ShootPosition", "Position", position.toString(), "IsHit", Boolean.valueOf(isHit).toString());
 
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // Handle the exception if the sleep is interrupted
+                e.printStackTrace();
+            }
+
+            
             position = enemyChoosePosition();
 
             checkHitResult = GameController.checkIsHit(myFleet, position);
@@ -137,11 +149,18 @@ public class Main {
                 System.out.println(colorize("                 -\\  \\     /  /-", YELLOW_TEXT()));
                 System.out.println(colorize("                   \\  \\   /  /", YELLOW_TEXT()));
 
+
                 if(sunken) {
+                    SoundEffectPlayer.playSinkSound();
                     System.out.printf("The enemey have sunken a %s\n", checkHitResult.getName());
                     myShipsSunken.add(checkHitResult.getName());
                 }
+                else{
+                    SoundEffectPlayer.playHitSound();
+                }
 
+            }else {
+                SoundEffectPlayer.playMissSound();
             }
 
             System.out.println("--------------------------------");
@@ -169,7 +188,6 @@ public class Main {
     }
 
     private static void InitializeGame() {
-        SoundEffectPlayer.playSound("fanfare");
 
         InitializeMyFleet();
 

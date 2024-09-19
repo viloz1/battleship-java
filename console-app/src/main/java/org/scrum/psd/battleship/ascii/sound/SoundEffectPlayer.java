@@ -8,20 +8,14 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
-public class SoundEffectPlayer {
 
-    public static void playSound(String sound) {
+
+public class SoundEffectPlayer {
+    static final String soundFolderPath = "src/main/java/org/scrum/psd/battleship/ascii/sound";
+
+    public static void playSound(String path) {
         try {
             // Load the audio file
-            String path="";
-            switch(sound){
-                case "fanfare": {
-                    path = "src/main/java/org/scrum/psd/battleship/ascii/sound/fanfare.wav";
-                    break;
-                }
-            }
-
-            System.out.println("path of sound is: " + path);
             File soundFile = new File(path);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
 
@@ -42,11 +36,27 @@ public class SoundEffectPlayer {
         }
     }
 
-    public static void main(String[] args) {
-        // Provide the path to the sound file
-        String filePath = "path_to_your_sound_file.wav";
 
-        // Play the sound effect
-        playSound(filePath);
+
+    public static void playWinSound(){
+        String path = SoundEffectPlayer.soundFolderPath + "/fanfare.wav";
+        SoundEffectPlayer.playSound(path);
     }
+    public static void playHitSound(){
+        String path = SoundEffectPlayer.soundFolderPath + "/explosion.wav";
+        SoundEffectPlayer.playSound(path);
+    }
+    public static void playSinkSound(){
+        String path = SoundEffectPlayer.soundFolderPath + "/big-explosion.wav";
+        SoundEffectPlayer.playSound(path);
+    }
+    public static void playMissSound(){
+        String path = SoundEffectPlayer.soundFolderPath + "/plums.wav";
+        SoundEffectPlayer.playSound(path);
+    }
+
+
+
+
+
 }
